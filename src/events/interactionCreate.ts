@@ -1,30 +1,30 @@
-import type { NexClient } from '#core/client'
-import type { Interaction } from 'discord.js'
+import type { NexClient } from '#core/client';
+import type { Interaction } from 'discord.js';
 
 const MetadataInteractionCreateEvent = {
-    name: 'interactionCreate'
-}
+	name: 'interactionCreate',
+};
 
 async function ExecuteInteractionCreateEvent(client: NexClient, interaction: Interaction) {
-    if (!interaction.isChatInputCommand()) return
+	if (!interaction.isChatInputCommand()) return;
 
-    const command = client.commands.get(interaction.commandName)
+	const command = client.commands.get(interaction.commandName);
 
-    if (command === undefined) return
+	if (command === undefined) return;
 
-    try {
-        command.execute(interaction)
-    }
-    catch (error) {
-        console.error(error)
-        await interaction.reply({
-            content: 'There was an error while executing this command!',
-            ephemeral: true
-        })
-    }
+	try {
+		command.execute(interaction, client);
+	}
+	catch (error) {
+		console.error(error);
+		await interaction.reply({
+			content: 'There was an error while executing this command!',
+			ephemeral: true,
+		});
+	}
 }
 
 export {
-    MetadataInteractionCreateEvent as metadata,
-    ExecuteInteractionCreateEvent as execute
-}
+	MetadataInteractionCreateEvent as metadata,
+	ExecuteInteractionCreateEvent as execute,
+};

@@ -1,15 +1,15 @@
-import type { NexClient } from '#core/client'
+import type { NexClient } from '#core/client';
 
 const MetadataReadyEvent = {
-    name: 'ready',
-    once: true
-}
+	name: 'ready',
+	once: true,
+};
 
 function ExecuteReadyEvent(client: NexClient) {
-    console.log(`Ready! Logged in as ${client.user?.tag}`)
+	console.log(`Ready! Logged in as ${client.user?.tag}`);
 }
 
 export {
-    MetadataReadyEvent as metadata,
-    ExecuteReadyEvent as execute
-}
+	MetadataReadyEvent as metadata,
+	ExecuteReadyEvent as execute,
+};

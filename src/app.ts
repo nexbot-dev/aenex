@@ -1,15 +1,21 @@
-import dotenv from 'dotenv'
-import { GatewayIntentBits } from 'discord.js'
-import { NexClient } from '#core/client'
-import { registerCommands, registerEvents } from '#core/registry'
+import dotenv from 'dotenv';
+import { GatewayIntentBits } from 'discord.js';
+import { NexClient } from '#core/client';
+import { registerCommands, registerEvents } from '#core/registry';
 
-dotenv.config()
+dotenv.config();
 
-const client = new NexClient({
-    intents: [GatewayIntentBits.Guilds]
-})
+(function main() {
+	const botToken = process.env.DISCORD_BOT_TOKEN;
 
-registerEvents(client)
-registerCommands(client)
+	if (!botToken) return;
 
-client.login(process.env.TOKEN)
+	const client = new NexClient({
+		intents: [GatewayIntentBits.Guilds],
+	});
+
+	registerEvents(client);
+	registerCommands(client);
+
+	client.login(botToken);
+})();

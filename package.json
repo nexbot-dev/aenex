@@ -8,7 +8,7 @@
     "discord bot"
   ],
   "author": "AenJojo",
-  "license": "AGPL-3.0",
+  "license": "GPL-3.0",
   "main": "dist/app.js",
   "private": true,
   "type": "module",

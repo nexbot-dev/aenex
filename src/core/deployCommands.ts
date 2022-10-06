@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import config from '#root/config';
@@ -5,8 +6,10 @@ import readDirectory from '#libs/readDirectory';
 import type { CommandType } from './registry';
 import { URL } from 'node:url';
 
+dotenv.config();
+
 (async function deployGuildCommands() {
-	const botToken = config.token;
+	const botToken = process.env.DISCORD_BOT_TOKEN;
 
 	if (!botToken) return;
 

@@ -8,7 +8,7 @@ import { URL } from 'node:url';
 
 dotenv.config();
 
-(async function deployGlobalCommands() {
+(async function deployGuildCommands() {
 	const botToken = process.env.DISCORD_BOT_TOKEN;
 
 	if (!botToken) return;

@@ -15,6 +15,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "deployGuildCommands": "node dist/core/deployGuildCommands.js",
+    "clean": "node scripts/clean-dist.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts"
   },

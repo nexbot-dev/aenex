@@ -1,4 +1,5 @@
 import { NexClient } from '#core/client';
+import { NexCommand } from '#core/command';
 import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,
@@ -6,92 +7,96 @@ import {
 } from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-function buildInfoCommand() {
-	return new SlashCommandBuilder()
-		.setName('info')
-		.setDescription('Checks information of a user, a server, or the bot.')
-		.addSubcommand(subcommand => subcommand
-			.setName('user')
-			.setDescription('Checks a user\'s information.')
-			.addUserOption(option => option
-				.setName('target')
-				.setDescription('The user account to check.')
-				.setRequired(true),
-			),
-		)
-		.addSubcommand(subcommand => subcommand
-			.setName('server')
-			.setDescription('Checks current server\'s information.'),
-		)
-		.addSubcommand(subcommand => subcommand
-			.setName('bot')
-			.setDescription('Checks this bot\'s information.'),
-		);
-}
+export class AenexCommand extends NexCommand {
+	declare public interaction: ChatInputCommandInteraction;
 
-async function executeInfoCommand(interaction: ChatInputCommandInteraction, client: NexClient) {
-	const subCommandName = interaction.options.getSubcommand();
-
-	if (subCommandName === 'user') {
-		await handleUserSubcommand(interaction);
+	constructor(client?: NexClient) {
+		super(client);
 	}
-	if (subCommandName === 'server') {
-		await handleServerSubcommand(interaction);
-	}
-	if (subCommandName === 'bot') {
-		await handleBotSubcommand(interaction, client);
-	}
-}
 
-async function handleUserSubcommand(interaction: ChatInputCommandInteraction) {
-	const user = interaction.options.getUser('target');
+	buildApplicationCommand() {
+		return new SlashCommandBuilder()
+			.setName('info')
+			.setDescription('Checks information of a user, a server, or the bot.')
+			.addSubcommand(subcommand => subcommand
+				.setName('user')
+				.setDescription('Checks a user\'s information.')
+				.addUserOption(option => option
+					.setName('target')
+					.setDescription('The user account to check.')
+					.setRequired(true),
+				),
+			)
+			.addSubcommand(subcommand => subcommand
+				.setName('server')
+				.setDescription('Checks current server\'s information.'),
+			)
+			.addSubcommand(subcommand => subcommand
+				.setName('bot')
+				.setDescription('Checks this bot\'s information.'),
+			);
+	}
 
-	const embed = new EmbedBuilder()
-		.setTitle('User Information')
-		.setDescription(stripIndents`
+	async executeApplicationCommand(interaction: ChatInputCommandInteraction) {
+		this.interaction = interaction;
+		const subCommandName = this.interaction.options.getSubcommand();
+
+		if (subCommandName === 'user') {
+			await this.handleSubcommandUser();
+		}
+		if (subCommandName === 'server') {
+			await this.handleSubcommandServer();
+		}
+		if (subCommandName === 'bot') {
+			await this.handleSubcommandBot();
+		}
+	}
+
+	async handleSubcommandUser() {
+		const user = this.interaction.options.getUser('target');
+
+		const embed = new EmbedBuilder()
+			.setTitle('User Information')
+			.setDescription(stripIndents`
 			Username: ${user?.username}
 			Discriminator: #${user?.discriminator}
 		`);
 
-	await interaction.reply({
-		content: '',
-		embeds: [embed],
-	});
-}
+		await this.interaction.reply({
+			content: '',
+			embeds: [embed],
+		});
+	}
 
-async function handleServerSubcommand(interaction: ChatInputCommandInteraction) {
-	const guild = interaction.guild;
+	async handleSubcommandServer() {
+		const guild = this.interaction.guild;
 
-	const embed = new EmbedBuilder()
-		.setTitle('Server Information')
-		.setDescription(stripIndents`
+		const embed = new EmbedBuilder()
+			.setTitle('Server Information')
+			.setDescription(stripIndents`
 			Server Name: ${guild?.name}
 			Owner Name: ${(await guild?.fetchOwner())?.user.username}
 		`);
 
-	await interaction.reply({
-		content: '',
-		embeds: [embed],
-	});
-}
+		await this.interaction.reply({
+			content: '',
+			embeds: [embed],
+		});
+	}
 
-async function handleBotSubcommand(interaction: ChatInputCommandInteraction, client: NexClient) {
-	const bot = client.user;
+	async handleSubcommandBot() {
+		const bot = this.client?.user;
 
-	const embed = new EmbedBuilder()
-		.setTitle('Bot Informations')
-		.setDescription(stripIndents`
+		const embed = new EmbedBuilder()
+			.setTitle('Bot Informations')
+			.setDescription(stripIndents`
 			Bot Name: ${bot?.username}
 			Discriminator: ${bot?.discriminator}
 		`);
 
-	await interaction.reply({
-		content: '',
-		embeds: [embed],
-	});
+		await this.interaction.reply({
+			content: '',
+			embeds: [embed],
+		});
+	}
 }
-
-export {
-	buildInfoCommand as metadata,
-	executeInfoCommand as execute,
-};

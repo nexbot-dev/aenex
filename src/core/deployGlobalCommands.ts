@@ -3,7 +3,6 @@ import { Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import config from '#root/config';
 import readDirectory from '#libs/readDirectory';
-import type { CommandType } from './registry';
 import { URL } from 'node:url';
 
 dotenv.config();
@@ -18,9 +17,10 @@ dotenv.config();
 
 	for (const file of filteredFiles) {
 		const filePath = new URL(`./commands/${file}`, directoryPath).href;
-		const command: CommandType = await import(filePath);
+		const { AenexCommand } = await import(filePath);
+		const command = new AenexCommand();
 
-		commands.push(command.metadata().toJSON());
+		commands.push(command.buildApplicationCommand().toJSON());
 	}
 
 	const rest = new REST({

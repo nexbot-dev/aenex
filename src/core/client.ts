@@ -3,10 +3,10 @@ import {
 	type ClientOptions,
 	Collection,
 } from 'discord.js';
-import type { CommandType } from './registry';
+import { NexCommand } from './command';
 
 export class NexClient extends Client {
-	commands: Collection<string, CommandType>;
+	commands: Collection<string, NexCommand>;
 
 	constructor(options: ClientOptions) {
 		super(options);

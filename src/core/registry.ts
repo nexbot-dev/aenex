@@ -1,7 +1,8 @@
 import readDirectory from '#libs/readDirectory';
 import type { NexClient } from './client';
-import type { CommandInteraction, Interaction, SlashCommandBuilder } from 'discord.js';
+import type { Interaction, SlashCommandBuilder } from 'discord.js';
 import { URL } from 'node:url';
+import { NexCommand } from './command';
 
 export interface EventType {
 	metadata: {
@@ -12,8 +13,8 @@ export interface EventType {
 }
 
 export interface CommandType {
-	metadata: () => SlashCommandBuilder;
-	execute: (interaction: CommandInteraction, client: NexClient) => void;
+	buildApplicationCommand: () => SlashCommandBuilder;
+	executeApplicationCommand: NexCommand;
 }
 
 export async function registerEvents(client: NexClient) {
@@ -37,8 +38,13 @@ export async function registerCommands(client: NexClient) {
 
 	for (const file of filteredFiles) {
 		const filePath = new URL(`./commands/${file}`, directoryPath).href;
-		const command: CommandType = await import(filePath);
+		const { AenexCommand } = await import(filePath);
+		const command: NexCommand = new AenexCommand(client);
 
-		client.commands.set(command.metadata().name, command);
+		if (command.buildApplicationCommand?.() === undefined) {
+			return;
+		}
+
+		client.commands.set(command.buildApplicationCommand().name, command);
 	}
 }

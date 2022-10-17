@@ -13,7 +13,7 @@ async function ExecuteInteractionCreateEvent(client: NexClient, interaction: Int
 	if (command === undefined) return;
 
 	try {
-		command.execute(interaction, client);
+		command.executeApplicationCommand?.(interaction);
 	}
 	catch (error) {
 		console.error(error);

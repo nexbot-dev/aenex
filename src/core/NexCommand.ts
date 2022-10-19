@@ -1,5 +1,5 @@
 import { CommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
-import { NexClient } from '#core/client';
+import { NexClient } from '#core/NexClient';
 
 export class NexCommand {
 	public readonly client?: NexClient;

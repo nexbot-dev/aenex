@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import { GatewayIntentBits } from 'discord.js';
-import { NexClient } from '#core/client';
-import { registerCommands, registerEvents } from '#core/registry';
+import { NexClient } from '#core/NexClient';
 
 dotenv.config();
 
@@ -14,8 +13,10 @@ dotenv.config();
 		intents: [GatewayIntentBits.Guilds],
 	});
 
-	registerEvents(client);
-	registerCommands(client);
+	const registry = client.registry;
+
+	registry.registerEvents();
+	registry.registerCommands();
 
 	client.login(botToken);
 })();

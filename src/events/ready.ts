@@ -1,4 +1,4 @@
-import type { NexClient } from '#core/client';
+import type { NexClient } from '#core/NexClient';
 
 const MetadataReadyEvent = {
 	name: 'ready',

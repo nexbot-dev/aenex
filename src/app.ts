@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { GatewayIntentBits } from 'discord.js';
-import { NexClient } from '#core/client';
+import { NexClient } from '#core/NexClient';
 
 dotenv.config();
 

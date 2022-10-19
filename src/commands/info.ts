@@ -1,5 +1,5 @@
-import { NexClient } from '#core/client';
-import { NexCommand } from '#core/command';
+import { NexClient } from '#core/NexClient';
+import { NexCommand } from '#core/NexCommand';
 import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,

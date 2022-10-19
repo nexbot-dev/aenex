@@ -1,8 +1,8 @@
 import readDirectory from '#libs/readDirectory';
-import type { NexClient } from './client';
+import type { NexClient } from './NexClient';
 import type { Interaction } from 'discord.js';
 import { URL } from 'node:url';
-import { NexCommand } from './command';
+import { NexCommand } from './NexCommand';
 
 export interface EventType {
 	metadata: {

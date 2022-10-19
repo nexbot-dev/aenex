@@ -1,6 +1,6 @@
 import readDirectory from '#libs/readDirectory';
 import type { NexClient } from './client';
-import type { Interaction, SlashCommandBuilder } from 'discord.js';
+import type { Interaction } from 'discord.js';
 import { URL } from 'node:url';
 import { NexCommand } from './command';
 
@@ -12,39 +12,56 @@ export interface EventType {
 	execute: (client: NexClient, interaction: Interaction, ...args: unknown[]) => void;
 }
 
-export interface CommandType {
-	buildApplicationCommand: () => SlashCommandBuilder;
-	executeApplicationCommand: NexCommand;
-}
+export class Registry {
+	readonly #client: NexClient;
 
-export async function registerEvents(client: NexClient) {
-	const { directoryPath, filteredFiles } = await readDirectory('./../events');
+	public constructor(client: NexClient) {
+		this.#client = client;
 
-	for (const file of filteredFiles) {
-		const filePath = new URL(`./events/${file}`, directoryPath).href;
+		return this;
+	}
+
+	async #registerEvent(fileName: string, directoryPath: URL) {
+		const filePath = new URL(`./events/${fileName}`, directoryPath).href;
 		const event: EventType = await import(filePath);
 
 		if (event.metadata.once) {
-			client.once(event.metadata.name, (...args) => event.execute(client, args[0], ...args));
+			this.#client.once(event.metadata.name, (...args) => event.execute(this.#client, args[0], ...args));
 		}
 		else {
-			client.on(event.metadata.name, (...args) => event.execute(client, args[0], ...args));
+			this.#client.on(event.metadata.name, (...args) => event.execute(this.#client, args[0], ...args));
 		}
 	}
-}
 
-export async function registerCommands(client: NexClient) {
-	const { directoryPath, filteredFiles } = await readDirectory('./../commands');
+	public async registerEvents() {
+		const { directoryPath, filteredFiles } = await readDirectory('./../events');
 
-	for (const file of filteredFiles) {
-		const filePath = new URL(`./commands/${file}`, directoryPath).href;
+		for (const file of filteredFiles) {
+			await this.#registerEvent(file, directoryPath);
+		}
+
+		return this;
+	}
+
+	async #registerCommand(fileName: string, directoryPath: URL) {
+		const filePath = new URL(`./commands/${fileName}`, directoryPath).href;
 		const { AenexCommand } = await import(filePath);
-		const command: NexCommand = new AenexCommand(client);
+		const command: NexCommand = new AenexCommand(this.#client);
 
 		if (command.buildApplicationCommand?.() === undefined) {
 			return;
 		}
 
-		client.commands.set(command.buildApplicationCommand().name, command);
+		this.#client.commands.set(command.buildApplicationCommand().name, command);
+	}
+
+	public async registerCommands() {
+		const { directoryPath, filteredFiles } = await readDirectory('./../commands');
+
+		for (const file of filteredFiles) {
+			await this.#registerCommand(file, directoryPath);
+		}
+
+		return this;
 	}
 }

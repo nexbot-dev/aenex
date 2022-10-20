@@ -14,7 +14,8 @@
   "type": "module",
   "scripts": {
     "start": "node dist/app.js",
-    "deployGuildCommands": "node dist/core/deployGuildCommands.js",
+    "deploy-to-server": "node scripts/deploy-commands.dev.js",
+    "deploy-to-global": "node scripts/deploy-commands.prod.js",
     "clean": "node scripts/clean-dist.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts"

@@ -15,7 +15,7 @@ export class AppCommand extends NexCommand {
 	}
 
 	buildApplicationCommand() {
-		const command = new SlashCommandBuilder()
+		const slashCommand = new SlashCommandBuilder()
 			.setName('info')
 			.setDescription('Checks information of a user, a server, or the bot.')
 			.addSubcommand(subcommand => subcommand
@@ -36,7 +36,7 @@ export class AppCommand extends NexCommand {
 				.setDescription('Checks this bot\'s information.'),
 			);
 
-		return command as SlashCommandBuilder;
+		return slashCommand as SlashCommandBuilder;
 	}
 
 	async executeApplicationCommand(interaction: ChatInputCommandInteraction) {

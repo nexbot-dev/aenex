@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-export class AenexCommand extends NexCommand {
+export class AppCommand extends NexCommand {
 	declare public interaction: ChatInputCommandInteraction;
 
 	constructor(client?: NexClient) {
@@ -15,7 +15,7 @@ export class AenexCommand extends NexCommand {
 	}
 
 	buildApplicationCommand() {
-		return new SlashCommandBuilder()
+		const command = new SlashCommandBuilder()
 			.setName('info')
 			.setDescription('Checks information of a user, a server, or the bot.')
 			.addSubcommand(subcommand => subcommand
@@ -35,6 +35,8 @@ export class AenexCommand extends NexCommand {
 				.setName('bot')
 				.setDescription('Checks this bot\'s information.'),
 			);
+
+		return command as SlashCommandBuilder;
 	}
 
 	async executeApplicationCommand(interaction: ChatInputCommandInteraction) {

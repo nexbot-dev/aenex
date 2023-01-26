@@ -1,6 +1,6 @@
 Aenex
 =====
 
-A discord bot that aim to provide gamification in your server.
+A discord bot built with discord.js and aimed to provide a simple game in your server.
 
 **NOTE: Bot is currently in development mode.**

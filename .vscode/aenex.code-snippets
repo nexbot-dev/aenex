@@ -29,5 +29,17 @@
 			"\t}",
 			"}",
 		]
+	},
+	"Create DB Table": {
+		"scope": "typescript",
+		"prefix": "nexdb",
+		"body": [
+			"import { Entity$3 } from 'typeorm';",
+			"",
+			"@Entity()",
+			"export class $1Entity {",
+			"\t$2",
+			"}",
+		]
 	}
 }

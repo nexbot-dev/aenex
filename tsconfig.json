@@ -6,9 +6,13 @@
     "baseUrl": ".",
     "paths": {
       "#commands/*": ["./src/commands/*"],
+      "#components/*": ["./src/components/*"],
       "#core/*": ["./src/core/*"],
+      "#entities/*": ["./src/databases/entities/*"],
+      "#migrations/*": ["./src/databases/migrations/*"],
+      "#databases/*": ["./src/databases/*"],
       "#events/*": ["./src/events/*"],
-      "#libs/*": ["src/libs/*"],
+      "#libs/*": ["./src/libs/*"],
       "#root/*": ["./src/*"]
     },
     "outDir": "./dist",

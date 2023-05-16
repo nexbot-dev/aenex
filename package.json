@@ -38,20 +38,14 @@
     "typescript": "^4.9.5"
   },
   "imports": {
-    "#commands/*": [
-      "./dist/commands/*.js"
-    ],
-    "#core/*": [
-      "./dist/core/*.js"
-    ],
-    "#events/*": [
-      "./dist/events/*.js"
-    ],
-    "#libs/*": [
-      "./dist/libs/*.js"
-    ],
-    "#root/*": [
-      "./dist/*.js"
-    ]
+    "#commands/*": ["./dist/commands/*.js"],
+    "#components/*": ["./dist/components/*.js"],
+    "#core/*": ["./dist/core/*.js"],
+    "#entities/*": ["./dist/databases/entities/*.js"],
+    "#migrations/*": ["./dist/databases/migrations/*.js"],
+    "#databases/*": ["./dist/databases/*.js"],
+    "#events/*": ["./dist/events/*.js"],
+    "#libs/*": ["./dist/libs/*.js"],
+    "#root/*": ["./dist/*.js"]
   }
 }

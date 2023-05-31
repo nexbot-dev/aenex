@@ -30,6 +30,7 @@
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
+    "@nexbot/eslint-config": "^1.0.1",
     "@types/common-tags": "^1.8.1",
     "@types/node": "^18.15.0",
     "@typescript-eslint/eslint-plugin": "^5.54.1",

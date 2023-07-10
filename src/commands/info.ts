@@ -1,5 +1,5 @@
-import { NexClient } from '#core/NexClient';
-import { NexCommand } from '#core/NexCommand';
+import { AenexClient } from '#core/AenexClient';
+import { Command } from '@nexbot/nex-framework';
 import {
 	ChatInputCommandInteraction,
 	EmbedBuilder,
@@ -7,14 +7,14 @@ import {
 } from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-export class AppCommand extends NexCommand {
-	declare public interaction: ChatInputCommandInteraction;
+export class AppCommand extends Command {
+	declare client: AenexClient;
 
-	constructor(client?: NexClient) {
+	constructor(client: AenexClient) {
 		super(client);
 	}
 
-	buildApplicationCommand() {
+	buildAppCommand() {
 		const slashCommand = new SlashCommandBuilder()
 			.setName('info')
 			.setDescription('Checks information of a user, a server, or the bot.')
@@ -39,64 +39,63 @@ export class AppCommand extends NexCommand {
 		return slashCommand as SlashCommandBuilder;
 	}
 
-	async executeApplicationCommand(interaction: ChatInputCommandInteraction) {
-		this.interaction = interaction;
-		const subCommandName = this.interaction.options.getSubcommand();
+	async executeAppCommand(interaction: ChatInputCommandInteraction) {
+		const subCommandName = interaction.options.getSubcommand();
 
 		if (subCommandName === 'user') {
-			await this.handleSubcommandUser();
+			await this.handleSubcommandUser(interaction);
 		}
 		if (subCommandName === 'server') {
-			await this.handleSubcommandServer();
+			await this.handleSubcommandServer(interaction);
 		}
 		if (subCommandName === 'bot') {
-			await this.handleSubcommandBot();
+			await this.handleSubcommandBot(interaction);
 		}
 	}
 
-	async handleSubcommandUser() {
-		const user = this.interaction.options.getUser('target');
+	async handleSubcommandUser(interaction: ChatInputCommandInteraction) {
+		const user = interaction.options.getUser('target');
 
 		const embed = new EmbedBuilder()
 			.setTitle('User Information')
 			.setDescription(stripIndents`
-			Username: ${user?.username}
-			Discriminator: #${user?.discriminator}
-		`);
+				Username: ${user?.username}
+				Discriminator: #${user?.discriminator}
+			`);
 
-		await this.interaction.reply({
+		await interaction.reply({
 			content: '',
 			embeds: [embed],
 		});
 	}
 
-	async handleSubcommandServer() {
-		const guild = this.interaction.guild;
+	async handleSubcommandServer(interaction: ChatInputCommandInteraction) {
+		const guild = interaction.guild;
 
 		const embed = new EmbedBuilder()
 			.setTitle('Server Information')
 			.setDescription(stripIndents`
-			Server Name: ${guild?.name}
-			Owner Name: ${(await guild?.fetchOwner())?.user.username}
-		`);
+				Server Name: ${guild?.name}
+				Owner Name: ${(await guild?.fetchOwner())?.user.username}
+			`);
 
-		await this.interaction.reply({
+		await interaction.reply({
 			content: '',
 			embeds: [embed],
 		});
 	}
 
-	async handleSubcommandBot() {
+	async handleSubcommandBot(interaction: ChatInputCommandInteraction) {
 		const bot = this.client?.user;
 
 		const embed = new EmbedBuilder()
 			.setTitle('Bot Informations')
 			.setDescription(stripIndents`
-			Bot Name: ${bot?.username}
-			Discriminator: ${bot?.discriminator}
-		`);
+				Bot Name: ${bot?.username}
+				Discriminator: ${bot?.discriminator}
+			`);
 
-		await this.interaction.reply({
+		await interaction.reply({
 			content: '',
 			embeds: [embed],
 		});

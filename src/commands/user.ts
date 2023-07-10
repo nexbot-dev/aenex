@@ -1,5 +1,5 @@
-import { NexClient } from '#core/NexClient';
-import { NexCommand } from '#core/NexCommand';
+import { AenexClient } from '#core/AenexClient';
+import { Command } from '@nexbot/nex-framework';
 import {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
@@ -19,15 +19,15 @@ const secondary = new ButtonBuilder()
 	.setLabel('Click me!')
 	.setStyle(ButtonStyle.Success);
 
-export class AenexCommand extends NexCommand {
-	declare public interaction: ChatInputCommandInteraction;
+export class AppCommand extends Command {
+	declare client: AenexClient;
 
-	constructor(client?: NexClient) {
+	constructor(client: AenexClient) {
 		super(client);
 	}
 
-	buildApplicationCommand() {
-		return new SlashCommandBuilder()
+	buildAppCommand() {
+		const slashCommand = new SlashCommandBuilder()
 			.setName('user')
 			.setDescription('Checks user\'s account information.')
 			.addSubcommand(subcommand => subcommand
@@ -52,36 +52,36 @@ export class AenexCommand extends NexCommand {
 					),
 				),
 			);
+
+		return slashCommand as SlashCommandBuilder;
 	}
 
-	async executeApplicationCommand(interaction: ChatInputCommandInteraction) {
-		this.interaction = interaction;
-
-		const subCommandName = this.interaction.options.getSubcommand();
+	async executeAppCommand(interaction: ChatInputCommandInteraction) {
+		const subCommandName = interaction.options.getSubcommand();
 
 		if (subCommandName === 'metadata') {
-			return this.handleSubcommandMetadata();
+			return this.handleSubcommandMetadata(interaction);
 		}
 		else if (subCommandName === 'misc') {
-			return this.handleSubcommandMiscellaneous();
+			return this.handleSubcommandMiscellaneous(interaction);
 		}
 	}
 
-	async handleSubcommandMetadata() {
-		const user = this.interaction.options.getUser('target');
+	async handleSubcommandMetadata(interaction: ChatInputCommandInteraction) {
+		const user = interaction.options.getUser('target');
 
 		if (!user) {
-			return await this.interaction.reply(`Hello ${this.interaction.user.username}`);
+			return await interaction.reply(`Hello ${interaction.user.username}`);
 		}
 
-		await this.interaction.reply(`Hello ${user.username}`);
+		await interaction.reply(`Hello ${user.username}`);
 	}
 
-	async handleSubcommandMiscellaneous() {
-		const info = this.interaction.options.getString('info_name');
+	async handleSubcommandMiscellaneous(interaction: ChatInputCommandInteraction) {
+		const info = interaction.options.getString('info_name');
 
 		if (info === null) {
-			await this.interaction.reply('No input given');
+			await interaction.reply('No input given');
 			return;
 		}
 
@@ -90,12 +90,12 @@ export class AenexCommand extends NexCommand {
 			.set('gif_meme', 'MEME GIF')
 			.set('gif_movie', 'MOVIE GIF');
 
-		let row = new ActionRowBuilder<ButtonBuilder>()
+		const row = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents(primary, secondary);
 
-		await this.interaction.reply({ content: responses.get(info), components: [row] });
+		await interaction.reply({ content: responses.get(info), components: [row] });
 
-		const message = await this.interaction.fetchReply();
+		const message = await interaction.fetchReply();
 
 		const collector = message.createMessageComponentCollector({
 			componentType: ComponentType.Button,
@@ -105,7 +105,7 @@ export class AenexCommand extends NexCommand {
 		if (!collector) return;
 
 		collector.on('collect', async i => {
-			if (i.user.id !== this.interaction.user.id) {
+			if (i.user.id !== interaction.user.id) {
 				await i.reply({
 					content: 'This button is not for you',
 					ephemeral: true,
@@ -115,14 +115,12 @@ export class AenexCommand extends NexCommand {
 			}
 
 			if (i.customId === 'primary') {
-				row = new ActionRowBuilder<ButtonBuilder>()
-					.addComponents(secondary);
+				row.setComponents(secondary);
 
 				await i.update({ content: 'Primary clicked!', components: [row] });
 			}
 			if (i.customId === 'secondary') {
-				row = new ActionRowBuilder<ButtonBuilder>()
-					.addComponents(primary);
+				row.setComponents(primary);
 
 				await i.update({ content: 'Secondary clicked!', components: [row] });
 			}
@@ -130,7 +128,7 @@ export class AenexCommand extends NexCommand {
 
 		collector.on('end', async collected => {
 			console.log(`Collected ${collected.size} items`);
-			await this.interaction.editReply({ content: `Collected ${collected.size} click`, components: [] });
+			await interaction.editReply({ content: `Collected ${collected.size} click`, components: [] });
 		});
 	}
 }

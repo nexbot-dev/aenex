@@ -1,15 +1,14 @@
-import type { NexClient } from '#core/NexClient';
+import { NexClient, Event } from '@nexbot/nex-framework';
 
-const MetadataReadyEvent = {
-	name: 'ready',
-	once: true,
-};
+export class AppEvent extends Event {
+	constructor(client: NexClient) {
+		super(client, {
+			name: 'ready',
+			once: true,
+		});
+	}
 
-function ExecuteReadyEvent(client: NexClient) {
-	console.log(`Ready! Logged in as ${client.user?.tag}`);
+	async execute() {
+		console.log(`Ready! Logged in as ${this.client.user?.tag}`);
+	}
 }
-
-export {
-	MetadataReadyEvent as metadata,
-	ExecuteReadyEvent as execute,
-};

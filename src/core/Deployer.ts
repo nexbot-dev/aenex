@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import config from '#root/config';
 
-export class NexDeploy {
+export class Deployer {
 	private readonly token: string;
 	private readonly commands: Array<RESTPostAPIApplicationCommandsJSONBody>;
 	private readonly rest: REST;

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.5.0",
+    "@nexbot/nex-framework": "^1.0.0",
     "common-tags": "^1.8.2",
     "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
@@ -36,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "eslint": "^8.36.0",
-    "typescript": "^4.9.5"
+    "typescript": "^5.1.6"
   },
   "imports": {
     "#commands/*": [
